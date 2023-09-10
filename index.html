@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier List Cursos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            height: 100vh;
+      
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+
+        img {
+            cursor: pointer;
+        }
+
+        .tier-list-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            width: 80%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .tier-list-header {
+            background-color: #343a40;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+        }
+
+        .element-row {
+            display: flex;
+            height: 100px;
+            border: 2px solid #333131;
+        }
+
+        .element-counter {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editable-element {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+            font-size: 35px;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .editable-element p {
+            flex-grow: 1;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-block: 1em;
+        }
+
+        .element-box {
+            margin-block: 0.5em;
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .image-box {
+            text-align: center;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            margin: 5px;
+            position: relative;
+            transition: transform 1s ease;
+        }
+
+        .image-box:hover {
+            transform: scale(1.1);
+        }
+
+        .image-label {
+            cursor: pointer;
+            display: block;
+            border: 2px dashed #ccc;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .uploaded-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+            margin-right: 15px;
+        }
+
+        .image-queue {
+            display: flex;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            flex-direction: row;
+        }
+
+        .image-queue .queued-image {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .fa-trash {
+            display: flex;
+            align-items: center;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+
+        .fa-trash:hover {
+            transform: scale(1.3);
+            transition: transform 0.5s ease;
+            color: red;
+        }
+
+/* Agrega estas reglas al final de tu CSS */
+@media (max-width: 768px) {
+    /* Estilos para pantallas más pequeñas, ajusta el tamaño de fuente según tus preferencias */
+    .editable-element {
+        font-size: 24px;
+    }
+
+    /* Otros estilos responsivos aquí... */
+}
+.footer {
+    margin-top: 22rem;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px;
+}
+
+    </style>
+</head>
+<body>
+
+
+        <!-- Navbar en la parte superior -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Tier List Cursos - UPAO</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Acerca de</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    <div class="container tier-list-container mt-5">
+
+        
+        <div class="tier-list-header">
+            <h1>Tier List de tus cursos</h1>
+        </div>
+
+        <div class="element-container" id="sortable">
+            <div class="element-row">
+                <div class="element-counter">1</div>
+                <div class="editable-element" contentEditable="true"><p>Nuevo elemento 1</p></div>
+                <div class="image-queue"></div>
+            </div>
+        </div>
+
+        <div class="button-container mt-3">
+            <button class="btn btn-danger" id="remove-element" style="margin-inline: 10px;">-</button>
+            <button class="btn btn-primary" id="add-element">+</button>
+        </div>
+
+        <div class="element-box" id="element-box" style="align-items: center; justify-content: center;">
+            <h1 style="font-family: poppins;">INSERTA Y ARRASTRA LOS ELEMENTOS A LA LISTA</h1>
+            <div class="image-box" id="image-container">
+                <input type="file" accept="image/*" id="image-upload" style="display: none;">
+                <label for="image-upload" class="image-label">
+                    <div class="image-placeholder">Agregar imagen</div>
+                    <img src="#" alt="Imagen cargada" class="uploaded-image" style="display: none;">
+                    <button class="delete-button" style="display: none;">Eliminar</button>
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Footer en la parte inferior -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2023 Tier List Cursos</p>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Función para agregar una fila
+        function addRow() {
+            const elementContainer = document.querySelector('.element-container');
+            const rowCount = elementContainer.childElementCount;
+
+            // Crear una nueva fila
+            const newRow = document.createElement('div');
+            newRow.className = 'element-row';
+
+            // Contador de fila
+            const counter = document.createElement('div');
+            counter.className = 'element-counter';
+            counter.textContent = rowCount + 1;
+            newRow.appendChild(counter);
+
+            // Elemento editable
+            const editableElement = document.createElement('div');
+            editableElement.className = 'editable-element';
+            editableElement.contentEditable = true;
+            editableElement.innerHTML = '<p>Nuevo elemento ' + (rowCount + 1) + '</p>';
+            newRow.appendChild(editableElement);
+
+            // Cola de imágenes
+            const imageQueue = document.createElement('div');
+            imageQueue.className = 'image-queue';
+            newRow.appendChild(imageQueue);
+
+            // Agregar la nueva fila al contenedor
+            elementContainer.appendChild(newRow);
+        }
+
+        // Agregar fila al hacer clic en el botón de agregar
+        document.getElementById('add-element').addEventListener('click', () => {
+            addRow();
+        });
+
+        // Quitar fila al hacer clic en el botón de quitar
+        document.getElementById('remove-element').addEventListener('click', () => {
+            const elementContainer = document.querySelector('.element-container');
+            const rowCount = elementContainer.childElementCount;
+
+            if (rowCount > 0) {
+                // Obtener la última fila y eliminarla
+                const lastRow = elementContainer.lastElementChild;
+                elementContainer.removeChild(lastRow);
+            }
+        });
+
+        // Resto del código JavaScript...
+    </script>
+    <script>
+        document.getElementById('add-element').addEventListener('click', () => {
+            // Agregar una fila con contador y elemento editable
+            const elementContainer = document.querySelector('.element-container');
+            const rowCount = elementContainer.childElementCount + 1; // Contador de filas
+
+            const newRow = document.createElement('div');
+            newRow.className = 'element-row';
+            newRow.innerHTML = `
+                <div class="element-counter">${rowCount}</div>
+                <div class="editable-element" contentEditable="true"><p>Nuevo elemento ${rowCount}</p></div>
+                <div class="image-queue"></div> <!-- Cola de imágenes -->
+                <div class="icon-container">
+                    <i class="fas fa-trash"></i> <!-- Ícono de basurero -->
+                    <i class="fas fa-undo"></i> <!-- Ícono para revertir -->
+                </div>
+            `;
+
+            // Manejar el revertir la fila
+            const undoIcon = newRow.querySelector('.fa-undo');
+            undoIcon.addEventListener('click', () => {
+                // Colocar la imagen nuevamente en la cola de imágenes
+                const imageQueue = newRow.querySelector('.image-queue');
+                imageQueue.appendChild(uploadedImage);
+
+                // Ocultar el botón "Eliminar"
+                deleteButton.style.display = 'none';
+            });
+        });
+
+        const elementBox = document.getElementById('element-box');
+
+        const addImageBox = () => {
+            // Cuadro para agregar imágenes
+            const imageBox = document.createElement('div');
+            imageBox.className = 'image-box';
+            imageBox.innerHTML = `
+                <input type="file" accept="image/*" id="image-upload" style="display: none;">
+                <label for="image-upload" class="image-label">
+                    <div class="image-placeholder">Agregar imagen</div>
+                    <img src="#" alt="Imagen cargada" class="uploaded-image" style="display: none;">
+                    <button class="delete-button" style="display: none;">Eliminar</button>
+                </label>
+            `;
+            elementBox.appendChild(imageBox);
+
+            // Actualizar el evento para el nuevo input
+            const imageUpload = imageBox.querySelector('#image-upload');
+            imageUpload.addEventListener('change', handleImageUpload);
+        };
+
+        const handleImageUpload = (e) => {
+            const uploadedImage = e.target.parentElement.querySelector('.uploaded-image');
+            const deleteButton = e.target.parentElement.querySelector('.delete-button');
+
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                // Mostrar la imagen cargada
+                uploadedImage.src = e.target.result;
+                uploadedImage.style.display = 'block';
+
+                // Mostrar el botón "Eliminar"
+                deleteButton.style.display = 'block';
+
+                // Ocultar el cuadro de carga para permitir subir más imágenes
+                e.target.style.display = 'none';
+
+                // Agregar un nuevo cuadro de carga para la siguiente imagen
+                addImageBox();
+
+                // Hacer la imagen arrastrable y soltable
+                $(uploadedImage).draggable({
+                    helper: 'clone',
+                    opacity: 0.7,
+                    cursor: 'move',
+                    zIndex: 1000,
+                });
+
+                // Hacer el elemento editable soltable para imágenes
+                $('.editable-element').droppable({
+                    accept: '.uploaded-image',
+                    drop: function(event, ui) {
+                        // Obtener el elemento soltado
+                        const droppedImage = ui.helper[0];
+
+                        // Agregar la imagen al elemento editable
+                        const imageQueue = this.querySelector('.image-queue');
+                        imageQueue.appendChild(droppedImage);
+
+                        // Ocultar la imagen en su cuadro original
+                        uploadedImage.style.display = 'none';
+                    }
+                });
+            };
+
+            reader.readAsDataURL(file);
+        };
+
+        const imageUpload = document.getElementById('image-upload');
+        imageUpload.addEventListener('change', handleImageUpload);
+
+        // Hacer que los elementos arrastrables sean soltables en la papelera
+        $('.fa-trash-container').droppable({
+            accept: '.uploaded-image',
+            tolerance: 'touch',
+            drop: function(event, ui) {
+                const droppedImage = ui.helper[0];
+                // Eliminar la imagen
+                droppedImage.remove();
+            },
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/12fe1e3fe1.js" crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+</body>
+</html>
